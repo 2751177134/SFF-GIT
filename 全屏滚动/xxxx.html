@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+        }
+        body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .container{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top:0;
+            left: 0;
+            transition: all .5s ease-in;
+            transform: translateY(0);
+        }
+        .container div{
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">0</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div class="footer">5</div>
+    </div>
+    <script src="jquery-1.12.2.js"></script>
+    <script>
+        $(function () {
+            var arrHeight=["20%","100%", "100%", "100%", "100%", "30%"];
+            var arrImg=["r-1.jpg","r-2.jpg","r-3.jpg","r-4.jpg","r-5.jpg","r-6.jpg"];
+            $(".container").children("div").each(function () {
+                var index=$(this).index();
+                $(this).css({"height":arrHeight[index],"backgroundImage":"url(images/"+arrImg[index]+")"});
+            })
+            var index=0;
+            var flag=true;
+            var top=0
+            window.onmousewheel=function (e) {
+                e = e || window.event;
+                var wheelDt = e.wheelDelta;
+                if(flag){
+                    flag=false;
+                    if (wheelDt > 0) {
+                        index--;
+                       if(index>0){
+                           top=100*(index-1)+parseInt(arrHeight[0]);
+                           $(".container").css("transform","translateY(-"+top+"%)");
+                       }else if(index<=0){
+                           index=0
+                           top=0;
+                           $(".container").css("transform","translateY(-"+top+"%)");
+
+                       }
+                    }else{
+                        index++;
+                        if(index<=arrHeight.length-2){
+                            top=100*(index-1)+parseInt(arrHeight[0]);
+                            $(".container").css("transform","translateY(-"+top+"%)");
+                        }else if(index=arrHeight.length-1){
+                            top=100*(index-2)+parseInt(arrHeight[0])+parseInt(arrHeight[index]);
+                            $(".container").css("transform","translateY(-"+top+"%)");
+                        }else if(index>arrHeight.length-1){
+                            index=arrHeight.length-1;
+                            console.log(1)
+                        }
+                    }
+                    //延时节流阀 防止滚动太快
+                    setTimeout(function () {
+                        flag=true;
+                    },500)
+                    console.log(index)
+                }
+
+            }
+        })
+    </script>
+</body>
+</html>
